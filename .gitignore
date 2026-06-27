@@ -1,0 +1,12 @@
+# Build artifacts / packaged theme bundles
+*.zip
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Shopify CLI
+.shopify/
