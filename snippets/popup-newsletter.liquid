@@ -1,0 +1,44 @@
+<div class="popup" id="NewsletterPopup" data-newsletter-popup
+     data-delay="{{ settings.newsletter_popup_delay }}"
+     aria-modal="true" role="dialog" aria-label="Newsletter offer">
+  <div class="popup__overlay" data-popup-close></div>
+  <div class="popup__card">
+    <button class="popup__close" data-popup-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    <div class="popup__media">
+      {%- if settings.newsletter_popup_image != blank -%}
+        {{ settings.newsletter_popup_image | image_url: width: 800 | image_tag: loading: 'lazy', alt: '' }}
+      {%- else -%}
+        <div style="position:absolute;inset:0;background:
+          radial-gradient(80% 80% at 30% 20%, rgba(0,194,255,0.35), transparent 55%),
+          linear-gradient(150deg,#101012,#0a0a0a);"></div>
+        <div style="position:absolute;inset:0;display:grid;place-items:center;color:#fff;text-align:center;padding:20px;">
+          <div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:2.6rem;line-height:1;color:var(--color-gold);">10%</div>
+            <div style="letter-spacing:0.3em;text-transform:uppercase;font-size:0.8rem;margin-top:8px;">Off your first kit</div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="popup__body">
+      <p class="eyebrow">First-order offer</p>
+      <h2 style="font-size:2rem;margin:6px 0 4px;">Get <span class="text-gold">10% Off</span></h2>
+      <p style="color:var(--color-muted);">Join the squad and unlock <strong>{{ settings.newsletter_discount_code }}</strong> — 10% off your first order, plus early access to every drop.</p>
+
+      <div data-popup-form>
+        {%- form 'customer', class: 'popup__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,popup">
+          <input type="email" name="contact[email]" class="field" placeholder="Email address" required>
+          <button type="submit" class="btn btn--gold">Claim</button>
+        {%- endform -%}
+        <p class="popup__note">No spam, just goals. Unsubscribe anytime.</p>
+      </div>
+
+      <div data-popup-success hidden>
+        <div style="display:flex;align-items:center;gap:10px;color:var(--color-gold);font-weight:700;margin-top:8px;">
+          {% render 'icon', name: 'check-circle' %} You're in!
+        </div>
+        <p style="margin-top:10px;">Use code <strong style="background:var(--color-bg);padding:4px 10px;border-radius:6px;border:1px dashed var(--color-border);">{{ settings.newsletter_discount_code }}</strong> at checkout.</p>
+      </div>
+    </div>
+  </div>
+</div>

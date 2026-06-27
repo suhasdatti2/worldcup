@@ -1,0 +1,113 @@
+{%- liquid
+  assign transparent = false
+  if section.settings.transparent_on_home and request.page_type == 'index'
+    assign transparent = true
+  endif
+-%}
+
+<div class="header-wrap" data-header data-transparent="{{ transparent }}">
+  <header class="site-header" role="banner">
+    <div class="page-width">
+      <div class="site-header__inner">
+
+        {%- comment -%} Left: burger (mobile) + nav (desktop) {%- endcomment -%}
+        <button class="icon-btn header-burger" data-open-menu aria-label="{{ 'accessibility.open_menu' | t }}" aria-expanded="false">
+          {% render 'icon', name: 'menu' %}
+        </button>
+
+        <nav class="header-nav" role="navigation" aria-label="Primary">
+          {%- for link in section.settings.menu.links -%}
+            <div class="header-nav__item">
+              <a href="{{ link.url }}" class="header-nav__link"{% if link.current %} aria-current="page"{% endif %}>
+                {{ link.title }}
+                {%- if link.links.size > 0 %} {% render 'icon', name: 'chevron-down' %}{% endif -%}
+              </a>
+
+              {%- if link.links.size > 0 -%}
+                <div class="mega-menu">
+                  <div class="mega-menu__grid">
+                    {%- for child in link.links limit: 3 -%}
+                      <div class="mega-menu__col">
+                        <p class="mega-menu__col-title">{{ child.title }}</p>
+                        {%- if child.links.size > 0 -%}
+                          {%- for grandchild in child.links -%}
+                            <a href="{{ grandchild.url }}" class="mega-menu__link">{{ grandchild.title }}</a>
+                          {%- endfor -%}
+                        {%- else -%}
+                          <a href="{{ child.url }}" class="mega-menu__link">Shop all {{ child.title }}</a>
+                        {%- endif -%}
+                      </div>
+                    {%- endfor -%}
+
+                    <a href="{{ section.settings.mega_link | default: link.url }}" class="mega-menu__feature">
+                      {%- if section.settings.mega_image -%}
+                        {{ section.settings.mega_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: '' }}
+                      {%- else -%}
+                        {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {%- endif -%}
+                      <span>{{ section.settings.mega_heading | default: 'New Arrivals →' }}</span>
+                    </a>
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </nav>
+
+        {%- comment -%} Center: logo {%- endcomment -%}
+        <a href="{{ routes.root_url }}" class="site-header__logo" aria-label="{{ shop.name }}">
+          {%- if settings.logo != blank -%}
+            {{ settings.logo | image_url: width: 480 | image_tag: alt: shop.name, widths: '120,240,360,480' }}
+          {%- else -%}
+            {{ settings.brand_name | default: shop.name }}
+          {%- endif -%}
+        </a>
+
+        {%- comment -%} Right: actions {%- endcomment -%}
+        <div class="header-actions">
+          <button class="icon-btn header-search-toggle" data-open-search aria-label="{{ 'accessibility.open_search' | t }}">
+            {% render 'icon', name: 'search' %}
+          </button>
+
+          {%- if section.settings.show_wishlist -%}
+            <a href="{{ section.settings.wishlist_url | default: '#' }}" class="icon-btn header-account" aria-label="{{ 'accessibility.wishlist' | t }}">
+              {% render 'icon', name: 'heart' %}
+              <span class="count-badge" data-wishlist-count hidden>0</span>
+            </a>
+          {%- endif -%}
+
+          <a href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="icon-btn header-account" aria-label="{{ 'accessibility.account' | t }}">
+            {% render 'icon', name: 'account' %}
+          </a>
+
+          <button class="icon-btn" data-open-cart aria-label="{{ 'accessibility.open_cart' | t }}">
+            {% render 'icon', name: 'cart' %}
+            <span class="count-badge" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    {
+      "type": "checkbox",
+      "id": "transparent_on_home",
+      "label": "Transparent over homepage hero",
+      "default": true
+    },
+    { "type": "checkbox", "id": "show_wishlist", "label": "Show wishlist icon", "default": true },
+    { "type": "url", "id": "wishlist_url", "label": "Wishlist page URL" },
+    { "type": "header", "content": "Mega menu feature card" },
+    { "type": "image_picker", "id": "mega_image", "label": "Feature image" },
+    { "type": "text", "id": "mega_heading", "label": "Feature heading", "default": "New Arrivals →" },
+    { "type": "url", "id": "mega_link", "label": "Feature link" }
+  ]
+}
+{% endschema %}

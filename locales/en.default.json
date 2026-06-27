@@ -1,0 +1,106 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "search": "Search",
+      "placeholder": "Search jerseys, teams, collections…",
+      "no_results": "No results found for \"{{ terms }}\". Try another search.",
+      "results_for": "Results for \"{{ terms }}\"",
+      "products": "Products",
+      "view_all": "View all results"
+    },
+    "newsletter": {
+      "success": "Welcome to the squad. Check your inbox for your code.",
+      "label": "Email",
+      "submit": "Subscribe"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you’re looking for has left the pitch.",
+      "link": "Back to home"
+    }
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close": "Close",
+    "open_menu": "Open menu",
+    "open_cart": "Open cart",
+    "open_search": "Open search",
+    "wishlist": "Wishlist",
+    "account": "Account",
+    "previous": "Previous",
+    "next": "Next",
+    "star_reviews": "{{ rating }} out of 5 stars"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "added_to_cart": "Added to cart",
+      "buy_it_now": "Buy It Now",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "size": "Size",
+      "color": "Color",
+      "quick_add": "Quick Add",
+      "from": "From",
+      "sale": "Sale",
+      "save": "Save {{ amount }}",
+      "on_sale": "Sale",
+      "regular_price": "Regular price",
+      "vendor": "Team",
+      "size_guide": "Size guide",
+      "low_stock": "Only {{ count }} left in stock",
+      "in_stock": "In stock — ready to ship",
+      "viewing_now": "{{ count }} people are viewing this right now",
+      "shipping_estimate": "Order today, get it by {{ date }}",
+      "description": "Description",
+      "details": "Product details",
+      "shipping": "Shipping & returns",
+      "guarantee": "30-day money-back guarantee"
+    },
+    "facets": {
+      "sort_by": "Sort by",
+      "showing": "{{ count }} products"
+    }
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "empty_cta": "Continue shopping",
+    "subtotal": "Subtotal",
+    "checkout": "Secure Checkout",
+    "remove": "Remove",
+    "discount": "Discount code",
+    "apply": "Apply",
+    "taxes_note": "Taxes and shipping calculated at checkout",
+    "free_shipping_qualified": "🎉 You’ve unlocked FREE shipping!",
+    "free_shipping_progress": "You’re {{ amount }} away from FREE shipping",
+    "recommended": "Complete the kit",
+    "express": "or express checkout",
+    "secure": "Secure 256-bit SSL encrypted checkout"
+  },
+  "customer": {
+    "account": {
+      "title": "My Account",
+      "orders": "Orders",
+      "details": "Account details",
+      "logout": "Log out"
+    },
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "create": "Create account",
+      "guest": "Continue as guest"
+    }
+  }
+}

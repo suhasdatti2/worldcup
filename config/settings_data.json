@@ -1,0 +1,44 @@
+{
+  "current": {
+    "brand_name": "NOVORA",
+    "brand_tagline": "Wear Your Passion. Represent Your Colors.",
+    "logo_width": 130,
+    "color_text": "#0A0A0A",
+    "color_background": "#F4F1EA",
+    "color_surface": "#FFFFFF",
+    "color_dark": "#0A0A0A",
+    "color_gold": "#D4AF37",
+    "color_blue": "#00C2FF",
+    "color_muted": "#6B6B6B",
+    "font_heading": "archivo_n7",
+    "font_body": "assistant_n4",
+    "heading_scale": 100,
+    "body_scale": 100,
+    "page_width": 1440,
+    "corner_radius": 14,
+    "enable_animations": true,
+    "show_vendor": true,
+    "show_rating": true,
+    "show_quick_add": true,
+    "show_wishlist": true,
+    "cart_type": "drawer",
+    "enable_free_shipping_bar": true,
+    "free_shipping_threshold": 120,
+    "enable_recent_purchases": true,
+    "enable_newsletter_popup": true,
+    "newsletter_discount_code": "WELCOME10",
+    "newsletter_popup_delay": 6,
+    "social_instagram": "https://instagram.com",
+    "social_tiktok": "https://tiktok.com",
+    "social_x": "https://x.com",
+    "social_youtube": "https://youtube.com"
+  },
+  "presets": {
+    "Novora": {
+      "color_text": "#0A0A0A",
+      "color_background": "#F4F1EA",
+      "color_gold": "#D4AF37",
+      "color_blue": "#00C2FF"
+    }
+  }
+}

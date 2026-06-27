@@ -1,0 +1,80 @@
+<section class="section" data-section-type="featured-teams">
+  <div class="page-width">
+    <div class="section-head section-head--center reveal">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="section-head__title">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}<p style="max-width:520px;color:var(--color-muted);">{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+
+    <div class="teams-grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign collection = collections[block.settings.collection]
+          assign img = block.settings.image
+          if img == blank and collection.featured_image
+            assign img = collection.featured_image
+          endif
+          assign url = block.settings.link
+          if url == blank and collection.url
+            assign url = collection.url
+          endif
+          assign subtitle = block.settings.subtitle
+          if subtitle == blank and collection != blank
+            assign subtitle = collection.products_count | append: ' kits'
+          endif
+        -%}
+        <a href="{{ url | default: '#' }}" class="team-card reveal" style="--reveal-delay: {{ forloop.index0 | times: 0.08 }}s;" {{ block.shopify_attributes }}>
+          <span class="team-card__accent" style="background: linear-gradient(90deg, {{ block.settings.color_1 }}, {{ block.settings.color_2 }});"></span>
+          <div class="team-card__media">
+            {%- if img != blank -%}
+              {{ img | image_url: width: 700 | image_tag: loading: 'lazy', sizes: '(max-width:749px) 50vw, 25vw', widths: '300,500,700', alt: block.settings.name }}
+            {%- else -%}
+              {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+          <div class="team-card__inner">
+            <div class="team-card__name">{{ block.settings.name }}</div>
+            <div class="team-card__count">{{ subtitle }}</div>
+            <span class="team-card__cta">Shop now {% render 'icon', name: 'arrow-right' %}</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured teams",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Represent" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Featured Teams" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Country-inspired collections, crafted for the true supporter." }
+  ],
+  "blocks": [
+    {
+      "type": "team",
+      "name": "Team",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Portugal" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Home · Away · Third" },
+        { "type": "color", "id": "color_1", "label": "Accent color 1", "default": "#d61f33" },
+        { "type": "color", "id": "color_2", "label": "Accent color 2", "default": "#0a7a3f" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "team", "settings": { "name": "Portugal", "color_1": "#d61f33", "color_2": "#0a7a3f" } },
+      { "type": "team", "settings": { "name": "Brazil", "color_1": "#ffd521", "color_2": "#0a7a3f" } },
+      { "type": "team", "settings": { "name": "Argentina", "color_1": "#75aadb", "color_2": "#ffffff" } },
+      { "type": "team", "settings": { "name": "France", "color_1": "#1f3a93", "color_2": "#d61f33" } }
+    ]
+  },
+  "presets": [{ "name": "Featured teams" }]
+}
+{% endschema %}

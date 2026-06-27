@@ -1,0 +1,33 @@
+{%- comment -%} Server-rendered cart line items (JS re-renders after changes) {%- endcomment -%}
+{%- if cart.item_count == 0 -%}
+  <div class="cart-empty" data-cart-empty>
+    {% render 'icon', name: 'cart' %}
+    <h3 style="margin-top:8px;">{{ 'cart.empty' | t }}</h3>
+    <p style="color:var(--color-muted);">Your kit bag is waiting to be filled.</p>
+    <button class="btn btn--gold" data-close-cart style="margin-top:8px;">{{ 'cart.empty_cta' | t }}</button>
+  </div>
+{%- else -%}
+  {%- for item in cart.items -%}
+    <div class="cart-item" data-cart-item data-key="{{ item.key }}" data-line="{{ forloop.index }}">
+      <a href="{{ item.url }}" class="cart-item__media">
+        {%- if item.image -%}{{ item.image | image_url: width: 168 | image_tag: loading: 'lazy', alt: item.product.title }}{%- endif -%}
+      </a>
+      <div class="cart-item__details">
+        <div class="cart-item__title">{{ item.product.title }}</div>
+        {%- unless item.product.has_only_default_variant -%}
+          <div class="cart-item__variant">{{ item.variant.title }}</div>
+        {%- endunless -%}
+        {%- if item.selling_plan_allocation -%}<div class="cart-item__variant">{{ item.selling_plan_allocation.selling_plan.name }}</div>{%- endif -%}
+        <div class="cart-item__qty" data-qty-wrap>
+          <button type="button" data-qty-down aria-label="Decrease quantity">{% render 'icon', name: 'minus' %}</button>
+          <span data-qty>{{ item.quantity }}</span>
+          <button type="button" data-qty-up aria-label="Increase quantity">{% render 'icon', name: 'plus' %}</button>
+        </div>
+      </div>
+      <div>
+        <div class="cart-item__price">{{ item.final_line_price | money }}</div>
+        <button type="button" class="cart-item__remove" data-remove>{{ 'cart.remove' | t }}</button>
+      </div>
+    </div>
+  {%- endfor -%}
+{%- endif -%}

@@ -1,0 +1,222 @@
+{%- liquid
+  assign product = product
+  assign current_variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if current_variant.compare_at_price > current_variant.price
+    assign on_sale = true
+  endif
+  assign rating = product.metafields.reviews.rating.value | default: 4.9
+  assign rating_count = product.metafields.reviews.rating_count | default: 128
+-%}
+
+<div class="page-width" data-section-type="product" data-product-id="{{ product.id }}">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a><span>/</span>
+    {%- if product.collections.first -%}<a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a><span>/</span>{%- endif -%}
+    <span style="opacity:1;color:var(--color-muted);">{{ product.title }}</span>
+  </nav>
+
+  <div class="product">
+    {%- comment -%} ===== MEDIA ===== {%- endcomment -%}
+    <div class="product__media-col">
+      <div class="gallery">
+        <div class="gallery__thumbs" data-gallery-thumbs>
+          {%- for media in product.media -%}
+            <button class="gallery__thumb{% if forloop.first %} is-active{% endif %}" data-thumb="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}">
+              {{ media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: media.alt | default: product.title }}
+            </button>
+          {%- endfor -%}
+        </div>
+        <div class="gallery__stage">
+          <div class="gallery__main" data-gallery-main>
+            {%- for media in product.media -%}
+              {%- if forloop.first -%}{%- assign img_loading = 'eager' -%}{%- assign img_fp = 'high' -%}{%- else -%}{%- assign img_loading = 'lazy' -%}{%- assign img_fp = 'auto' -%}{%- endif -%}
+              <div class="gallery__slide" data-slide="{{ forloop.index0 }}" data-zoom>
+                {{ media | image_url: width: 1200 | image_tag:
+                  loading: img_loading,
+                  fetchpriority: img_fp,
+                  sizes: '(max-width:749px) 100vw, 55vw',
+                  widths: '500,750,1000,1200,1600',
+                  alt: media.alt | default: product.title }}
+              </div>
+            {%- else -%}
+              <div class="gallery__slide">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+            {%- endfor -%}
+          </div>
+          <span class="gallery__zoom-hint">{% render 'icon', name: 'zoom' %} Hover to zoom</span>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} ===== INFO ===== {%- endcomment -%}
+    <div class="product__info-col">
+      {%- if product.vendor != blank -%}<p class="product__vendor">{{ product.vendor }}</p>{%- endif -%}
+      <h1 class="product__title">{{ product.title }}</h1>
+
+      <div class="product__rating-row">
+        {% render 'rating', value: rating %}
+        <a href="#reviews" class="product__rating-link">{{ rating_count }} reviews</a>
+      </div>
+
+      <div data-price-block>
+        {% render 'price', product: product, context: 'product' %}
+      </div>
+      <p class="product__tax-note">{{ 'products.product.guarantee' | t }} · Taxes included where applicable.</p>
+
+      {%- comment -%} ===== SCARCITY ===== {%- endcomment -%}
+      <div class="scarcity">
+        {%- assign stock = current_variant.inventory_quantity -%}
+        {%- if current_variant.inventory_management == 'shopify' and stock > 0 and stock <= 15 -%}
+          {%- assign pct = stock | times: 100 | divided_by: 15 -%}
+          <div class="low-stock">
+            {% render 'icon', name: 'bolt' %}
+            <span data-low-stock>{{ 'products.product.low_stock' | t: count: stock }}</span>
+            <span class="low-stock__bar"><span class="low-stock__fill" style="width:{{ pct }}%"></span></span>
+          </div>
+        {%- endif -%}
+        <div class="live-visitors"><span class="live-dot"></span> <span data-live-visitors>18</span> people are viewing this right now</div>
+      </div>
+
+      {%- comment -%} ===== FORM ===== {%- endcomment -%}
+      {%- form 'product', product, id: 'ProductForm', class: 'product-form', novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            {%- assign opt_name = option.name | downcase -%}
+            <div class="variant" data-option-index="{{ forloop.index0 }}">
+              <div class="variant__label">
+                <span>{{ option.name }}: <span class="variant__selected" data-selected-option="{{ forloop.index0 }}">{{ option.selected_value }}</span></span>
+                {%- if opt_name contains 'size' -%}<a href="#size-guide" class="size-guide-link" data-open-accordion="size-guide">{{ 'products.product.size_guide' | t }}</a>{%- endif -%}
+              </div>
+
+              {%- if opt_name contains 'color' or opt_name contains 'colour' -%}
+                <div class="color-swatches">
+                  {%- for value in option.values -%}
+                    <label class="color-swatch{% if option.selected_value == value %} is-active{% endif %}"
+                           style="background:{{ value | downcase | split: ' ' | last }};"
+                           title="{{ value }}" data-option-value data-option-position="{{ option.position }}">
+                      <input type="radio" name="option-{{ option.position }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %} style="position:absolute;opacity:0;">
+                    </label>
+                  {%- endfor -%}
+                </div>
+              {%- else -%}
+                <div class="variant__sizes">
+                  {%- for value in option.values -%}
+                    <label class="size-swatch{% if option.selected_value == value %} is-active{% endif %}" data-option-value data-option-position="{{ option.position }}">
+                      <input type="radio" name="option-{{ option.position }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}>
+                      {{ value }}
+                    </label>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        <div class="product__buy">
+          <div class="qty">
+            <button type="button" data-qty-minus aria-label="Decrease">{% render 'icon', name: 'minus' %}</button>
+            <input type="number" name="quantity" value="1" min="1" inputmode="numeric" data-qty-input aria-label="{{ 'products.product.quantity' | t }}">
+            <button type="button" data-qty-plus aria-label="Increase">{% render 'icon', name: 'plus' %}</button>
+          </div>
+          <button type="submit" name="add" class="btn btn--gold product__atc" data-atc {% unless current_variant.available %}disabled{% endunless %}>
+            <span data-atc-text>{% if current_variant.available %}{{ 'products.product.add_to_cart' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</span>
+          </button>
+        </div>
+
+        {{ form | payment_button }}
+      {%- endform -%}
+
+      {%- comment -%} ===== SHIPPING ESTIMATE ===== {%- endcomment -%}
+      <div class="shipping-estimate">
+        {% render 'icon', name: 'truck' %}
+        <span><strong>Order in <span data-ship-timer>03:42:18</span></strong> — get it by <strong data-ship-date>this week</strong></span>
+      </div>
+
+      {%- comment -%} ===== TRUST ===== {%- endcomment -%}
+      <div class="trust-row">
+        <div class="trust-item">{% render 'icon', name: 'medal' %} Authentic match-grade fabric</div>
+        <div class="trust-item">{% render 'icon', name: 'shield' %} 30-day money-back guarantee</div>
+        <div class="trust-item">{% render 'icon', name: 'truck' %} Free shipping over ${{ settings.free_shipping_threshold }}</div>
+        <div class="trust-item">{% render 'icon', name: 'lock' %} Secure encrypted checkout</div>
+      </div>
+
+      <div class="payment-trust">
+        <span>Guaranteed safe checkout</span>
+        <span class="payment-trust__icons">
+          {% render 'icon', name: 'visa' %}{% render 'icon', name: 'mastercard' %}{% render 'icon', name: 'amex' %}{% render 'icon', name: 'paypal' %}{% render 'icon', name: 'applepay' %}
+        </span>
+      </div>
+
+      {%- comment -%} ===== BUNDLE TIERS ===== {%- endcomment -%}
+      <div class="bundle">
+        <div class="bundle__title">{% render 'icon', name: 'gift' %} <strong>Bundle &amp; save</strong></div>
+        <div class="bundle__tiers">
+          <div class="bundle-tier" data-bundle data-qty="2"><div class="bundle-tier__qty">Buy 2</div><span class="bundle-tier__save">Save 10%</span></div>
+          <div class="bundle-tier is-active" data-bundle data-qty="3"><span class="bundle-tier__best">Most popular</span><div class="bundle-tier__qty">Buy 3</div><span class="bundle-tier__save">Save 20%</span></div>
+          <div class="bundle-tier" data-bundle data-qty="4"><div class="bundle-tier__qty">Buy 4</div><span class="bundle-tier__save">Save 30%</span></div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--color-muted);margin:14px 0 0;">Mix &amp; match any kits. Discount auto-applies at checkout.</p>
+      </div>
+
+      {%- comment -%} ===== ACCORDION ===== {%- endcomment -%}
+      <div class="accordion" data-accordion>
+        <div class="accordion__item">
+          <button class="accordion__trigger" aria-expanded="true">{{ 'products.product.description' | t }} {% render 'icon', name: 'plus' %}</button>
+          <div class="accordion__panel" style="max-height:600px;"><div class="accordion__panel-inner rte">{{ product.description | default: 'Premium match-grade jersey crafted from breathable, moisture-wicking fabric. Tailored fit with authentic team colors and detailing. Designed for the terraces, the pitch, and the street.' }}</div></div>
+        </div>
+        <div class="accordion__item">
+          <button class="accordion__trigger" aria-expanded="false">{{ 'products.product.details' | t }} {% render 'icon', name: 'plus' %}</button>
+          <div class="accordion__panel"><div class="accordion__panel-inner"><ul style="padding-left:18px;list-style:disc;"><li>100% recycled performance polyester</li><li>Moisture-wicking, quick-dry technology</li><li>Heat-pressed crest &amp; numbers</li><li>Machine washable</li><li>Ethically manufactured</li></ul></div></div>
+        </div>
+        <div class="accordion__item" id="size-guide">
+          <button class="accordion__trigger" aria-expanded="false">{{ 'products.product.size_guide' | t }} {% render 'icon', name: 'plus' %}</button>
+          <div class="accordion__panel"><div class="accordion__panel-inner">
+            <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+              <thead><tr style="text-align:left;border-bottom:1px solid var(--color-border);"><th style="padding:6px;">Size</th><th>Chest (in)</th><th>Length (in)</th></tr></thead>
+              <tbody>
+                <tr><td style="padding:6px;">S</td><td>36–38</td><td>27</td></tr>
+                <tr><td style="padding:6px;">M</td><td>39–41</td><td>28</td></tr>
+                <tr><td style="padding:6px;">L</td><td>42–44</td><td>29</td></tr>
+                <tr><td style="padding:6px;">XL</td><td>45–47</td><td>30</td></tr>
+                <tr><td style="padding:6px;">XXL</td><td>48–50</td><td>31</td></tr>
+              </tbody>
+            </table>
+          </div></div>
+        </div>
+        <div class="accordion__item">
+          <button class="accordion__trigger" aria-expanded="false">{{ 'products.product.shipping' | t }} {% render 'icon', name: 'plus' %}</button>
+          <div class="accordion__panel"><div class="accordion__panel-inner">Free worldwide shipping on orders over ${{ settings.free_shipping_threshold }}. Standard delivery 5–8 business days, express 2–3 days. 30-day easy returns — if it’s not perfect, send it back.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} ===== STICKY ATC BAR ===== {%- endcomment -%}
+<div class="sticky-atc" data-sticky-atc>
+  <div class="page-width sticky-atc__inner">
+    <div class="sticky-atc__media">
+      {%- if product.featured_media -%}{{ product.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+    </div>
+    <div class="sticky-atc__price-wrap">
+      <div class="sticky-atc__title">{{ product.title }}</div>
+      <div class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</div>
+    </div>
+    <div class="sticky-atc__actions">
+      <button type="button" class="btn btn--gold" data-sticky-atc-btn>{{ 'products.product.add_to_cart' | t }}</button>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" data-product-json>{{ product.variants | json }}</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "settings": [],
+  "blocks": []
+}
+{% endschema %}

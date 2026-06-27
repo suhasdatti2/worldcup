@@ -1,0 +1,26 @@
+<div class="page-width page-width--narrow section" style="max-width:460px;">
+  <div id="login" data-customer-login>
+    <div class="section-head section-head--center"><h1 class="section-head__title">{{ 'customer.login.title' | t }}</h1></div>
+    {%- form 'customer_login', novalidate: 'novalidate' -%}
+      {{ form.errors | default_errors }}
+      <input type="email" name="customer[email]" class="field" placeholder="{{ 'customer.login.email' | t }}" required style="margin-bottom:12px;">
+      {%- if form.password_needed -%}
+        <input type="password" name="customer[password]" class="field" placeholder="{{ 'customer.login.password' | t }}" required>
+        <a href="#recover" style="display:inline-block;margin:10px 0;font-size:0.88rem;color:var(--color-blue);" data-show-recover>Forgot password?</a>
+      {%- endif -%}
+      <button type="submit" class="btn btn--gold btn--block btn--lg">{{ 'customer.login.submit' | t }}</button>
+    {%- endform -%}
+    <p style="text-align:center;margin-top:18px;">New here? <a href="{{ routes.account_register_url }}" style="font-weight:700;border-bottom:2px solid var(--color-gold);">{{ 'customer.login.create' | t }}</a></p>
+  </div>
+
+  <div id="recover" data-customer-recover hidden>
+    <div class="section-head section-head--center"><h1 class="section-head__title">Reset password</h1></div>
+    {%- form 'recover_customer_password' -%}
+      {{ form.errors | default_errors }}
+      {%- if form.posted_successfully? -%}<p style="color:var(--color-gold);">We’ve sent you an email with a reset link.</p>{%- endif -%}
+      <input type="email" name="email" class="field" placeholder="{{ 'customer.login.email' | t }}" required style="margin-bottom:12px;">
+      <button type="submit" class="btn btn--gold btn--block">Send reset link</button>
+    {%- endform -%}
+    <p style="text-align:center;margin-top:14px;"><a href="#login" data-show-login>Back to sign in</a></p>
+  </div>
+</div>

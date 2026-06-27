@@ -1,0 +1,29 @@
+<div class="page-width section" data-section-type="list-collections">
+  <div class="section-head section-head--center">
+    <p class="eyebrow">Shop by team</p>
+    <h1 class="section-head__title">All Collections</h1>
+  </div>
+
+  <div class="teams-grid">
+    {%- for collection in collections -%}
+      <a href="{{ collection.url }}" class="team-card reveal" style="--reveal-delay: {{ forloop.index0 | times: 0.04 }}s;">
+        <div class="team-card__media">
+          {%- if collection.featured_image -%}
+            {{ collection.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', sizes: '(max-width:749px) 50vw, 25vw', widths: '300,500,700', alt: collection.title }}
+          {%- else -%}
+            {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        <div class="team-card__inner">
+          <div class="team-card__name">{{ collection.title }}</div>
+          <div class="team-card__count">{{ collection.products_count }} kits</div>
+          <span class="team-card__cta">Shop now {% render 'icon', name: 'arrow-right' %}</span>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{ "name": "List collections", "tag": "section", "settings": [] }
+{% endschema %}

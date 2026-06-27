@@ -1,0 +1,71 @@
+{%- paginate collection.products by section.settings.per_page -%}
+<div class="page-width" data-section-type="collection">
+  <div class="collection-banner reveal">
+    <div class="collection-banner__bg">
+      {%- if collection.image -%}
+        {{ collection.image | image_url: width: 2000 | image_tag: loading: 'eager', sizes: '100vw', widths: '750,1100,1500,2000', alt: collection.title }}
+      {%- else -%}
+        <div style="position:absolute;inset:0;background:radial-gradient(70% 100% at 80% 20%, rgba(212,175,55,0.25), transparent 55%),linear-gradient(120deg,#111,#0a0a0a);"></div>
+      {%- endif -%}
+    </div>
+    <div class="collection-banner__inner">
+      <p class="eyebrow" style="color:var(--color-gold);">Collection</p>
+      <h1 style="color:#fff;">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}<p style="color:rgba(255,255,255,0.8);max-width:520px;">{{ collection.description | strip_html | truncate: 160 }}</p>{%- endif -%}
+    </div>
+  </div>
+
+  <div class="collection-toolbar">
+    <span class="collection-toolbar__count">{{ collection.products_count }} products</span>
+    <form>
+      <label class="visually-hidden" for="SortBy">{{ 'products.facets.sort_by' | t }}</label>
+      <select name="sort_by" id="SortBy" onchange="this.form.submit()">
+        {%- assign sort_options = collection.sort_options -%}
+        {%- for option in sort_options -%}
+          <option value="{{ option.value }}"{% if option.value == collection.sort_by %} selected{% endif %}>{{ option.name }}</option>
+        {%- endfor -%}
+      </select>
+      {%- for filter in collection.filters -%}
+        {%- for value in filter.active_values -%}
+          <input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">
+        {%- endfor -%}
+      {%- endfor -%}
+    </form>
+  </div>
+
+  {%- if collection.products.size > 0 -%}
+    <div class="product-grid">
+      {%- for product in collection.products -%}
+        {% render 'product-card', product: product, index: forloop.index0 %}
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="pagination" aria-label="Pagination">
+        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">{% render 'icon', name: 'chevron-left' %}</a>{%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+          {%- else -%}<span class="{% if part.title == paginate.current_page %}is-current{% endif %}">{{ part.title }}</span>{%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}<a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">{% render 'icon', name: 'chevron-right' %}</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+  {%- else -%}
+    <div style="text-align:center;padding:80px 20px;">
+      <h3>No products yet</h3>
+      <p style="color:var(--color-muted);">Check back soon — new kits drop every week.</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn btn--gold" style="margin-top:10px;">Shop all jerseys</a>
+    </div>
+  {%- endif -%}
+</div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Collection grid",
+  "tag": "section",
+  "settings": [
+    { "type": "range", "id": "per_page", "min": 8, "max": 48, "step": 4, "label": "Products per page", "default": 24 }
+  ]
+}
+{% endschema %}

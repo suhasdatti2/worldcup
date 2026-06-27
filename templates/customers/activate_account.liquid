@@ -1,0 +1,12 @@
+<div class="page-width page-width--narrow section" style="max-width:460px;">
+  <div class="section-head section-head--center"><h1 class="section-head__title">Activate your account</h1></div>
+  {%- form 'activate_customer_password' -%}
+    {{ form.errors | default_errors }}
+    <input type="password" name="customer[password]" class="field" placeholder="Password" required style="margin-bottom:12px;">
+    <input type="password" name="customer[password_confirmation]" class="field" placeholder="Confirm password" required>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button type="submit" name="commit" class="btn btn--gold btn--block">Activate</button>
+      <button type="submit" name="decline" class="btn btn--outline btn--block">Decline</button>
+    </div>
+  {%- endform -%}
+</div>

@@ -1,0 +1,16 @@
+{%- comment -%}
+  Star rating. Params: value (0-5), count (optional), show_count (bool)
+{%- endcomment -%}
+{%- assign rounded = value | times: 2 | round | divided_by: 2.0 -%}
+<span class="rating" role="img" aria-label="{{ 'accessibility.star_reviews' | t: rating: value }}">
+  <span class="rating__stars">
+    {%- for i in (1..5) -%}
+      {%- if i <= rounded -%}
+        {% render 'icon', name: 'star' %}
+      {%- else -%}
+        <span style="opacity:0.25;">{% render 'icon', name: 'star' %}</span>
+      {%- endif -%}
+    {%- endfor -%}
+  </span>
+  {%- if show_count and count -%}<span class="rating__count">({{ count }})</span>{%- endif -%}
+</span>

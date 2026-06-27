@@ -1,0 +1,74 @@
+{%- comment -%} Slide-out cart drawer {%- endcomment -%}
+<div class="overlay" data-cart-overlay></div>
+<aside class="drawer" id="CartDrawer" data-cart-drawer aria-label="{{ 'cart.title' | t }}" aria-modal="true" role="dialog">
+  <div class="drawer__header">
+    <span class="drawer__title">{{ 'cart.title' | t }} <span data-cart-count-text>({{ cart.item_count }})</span></span>
+    <button class="drawer__close" data-close-cart aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+
+  {%- if settings.enable_free_shipping_bar -%}
+    <div class="fsb" data-fsb>
+      <p class="fsb__text" data-fsb-text></p>
+      <div class="fsb__bar"><div class="fsb__fill" data-fsb-fill style="width:0%"></div></div>
+    </div>
+  {%- endif -%}
+
+  <div class="drawer__body">
+    <div data-cart-items>
+      {% render 'cart-items' %}
+    </div>
+
+    {%- comment -%} Upsells {%- endcomment -%}
+    {%- assign rec = collections[settings.cart_upsell_collection].products | default: collections.all.products -%}
+    {%- if rec.size > 0 -%}
+      <div class="cart-upsell" data-cart-upsell>
+        <p class="cart-upsell__title">{{ 'cart.recommended' | t }}</p>
+        {%- for product in rec limit: 2 -%}
+          {%- unless cart.items contains product -%}
+            <div class="cart-upsell__item">
+              <a href="{{ product.url }}" class="cart-upsell__media">
+                {%- if product.featured_media -%}{{ product.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+              </a>
+              <div>
+                <div class="cart-upsell__name">{{ product.title }}</div>
+                <div class="cart-upsell__price">{{ product.price | money }}</div>
+              </div>
+              {%- if product.has_only_default_variant -%}
+                <button class="btn btn--outline btn--sm cart-upsell__add" data-quick-add data-variant-id="{{ product.selected_or_first_available_variant.id }}">{% render 'icon', name: 'plus' %}</button>
+              {%- else -%}
+                <a href="{{ product.url }}" class="btn btn--outline btn--sm cart-upsell__add">{% render 'icon', name: 'plus' %}</a>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="drawer__footer" data-cart-footer {% if cart.item_count == 0 %}hidden{% endif %}>
+    <form action="{{ routes.cart_url }}" method="post">
+      <div class="cart-coupon">
+        <input type="text" class="field" name="discount" placeholder="Discount code" aria-label="{{ 'cart.discount' | t }}">
+        <button type="submit" name="checkout" class="btn btn--outline btn--sm">{{ 'cart.apply' | t }}</button>
+      </div>
+    </form>
+
+    <div class="cart-totals">
+      <span class="cart-totals__label">{{ 'cart.subtotal' | t }}</span>
+      <span class="cart-totals__value" data-cart-subtotal>{{ cart.total_price | money }}</span>
+    </div>
+    <p style="font-size:0.8rem;color:var(--color-muted);margin:0 0 14px;">{{ 'cart.taxes_note' | t }}</p>
+
+    <form action="{{ routes.cart_url }}" method="post" id="CartForm">
+      <button type="submit" name="checkout" class="btn btn--block btn--lg" style="margin-bottom:10px;">
+        {% render 'icon', name: 'lock' %} {{ 'cart.checkout' | t }}
+      </button>
+      {%- if additional_checkout_buttons -%}
+        <div class="cart-express__label">{{ 'cart.express' | t | default: 'or express checkout' }}</div>
+        <div class="cart-express">{{ content_for_additional_checkout_buttons }}</div>
+      {%- endif -%}
+    </form>
+
+    <p class="payment-trust" style="justify-content:center;margin-top:12px;">{% render 'icon', name: 'shield' %} {{ 'cart.secure' | t }}</p>
+  </div>
+</aside>

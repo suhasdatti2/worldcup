@@ -1,0 +1,35 @@
+<div class="overlay" data-menu-overlay></div>
+<aside class="drawer drawer--left" id="MobileMenu" data-mobile-menu aria-label="Menu" aria-modal="true" role="dialog">
+  <div class="drawer__header">
+    <span class="drawer__title">{{ settings.brand_name | default: shop.name }}</span>
+    <button class="drawer__close" data-close-menu aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+  <div class="drawer__body">
+    <nav class="mobile-nav" aria-label="Mobile">
+      {%- assign main = linklists['main-menu'] -%}
+      {%- for link in main.links -%}
+        {%- if link.links.size > 0 -%}
+          <details class="mobile-nav__group">
+            <summary style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;font-family:var(--font-heading);font-weight:700;font-size:1.1rem;border-bottom:1px solid var(--color-border);cursor:pointer;list-style:none;">
+              {{ link.title }} {% render 'icon', name: 'chevron-down' %}
+            </summary>
+            <div style="padding:6px 0 12px 12px;">
+              <a href="{{ link.url }}" style="display:block;padding:8px 0;font-weight:600;">Shop all</a>
+              {%- for child in link.links -%}
+                <a href="{{ child.url }}" style="display:block;padding:8px 0;color:var(--color-muted);">{{ child.title }}</a>
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- else -%}
+          <a href="{{ link.url }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;font-family:var(--font-heading);font-weight:700;font-size:1.1rem;border-bottom:1px solid var(--color-border);">
+            {{ link.title }} {% render 'icon', name: 'chevron-right' %}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;">
+      <a href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="btn btn--outline btn--block">{% render 'icon', name: 'account' %} {{ 'customer.account.title' | t }}</a>
+    </div>
+  </div>
+</aside>

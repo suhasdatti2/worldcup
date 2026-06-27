@@ -1,0 +1,48 @@
+<div class="page-width section" data-section-type="cart-page" data-cart-page>
+  <h1 style="margin-bottom:24px;">{{ 'cart.title' | t }}</h1>
+
+  {%- if cart.item_count == 0 -%}
+    <div class="cart-empty">
+      {% render 'icon', name: 'cart' %}
+      <h3 style="margin-top:8px;">{{ 'cart.empty' | t }}</h3>
+      <a href="{{ routes.all_products_collection_url }}" class="btn btn--gold" style="margin-top:10px;">{{ 'cart.empty_cta' | t }}</a>
+    </div>
+  {%- else -%}
+    {%- if settings.enable_free_shipping_bar -%}
+      <div class="fsb" data-fsb style="border-radius:var(--radius);margin-bottom:24px;">
+        <p class="fsb__text" data-fsb-text></p>
+        <div class="fsb__bar"><div class="fsb__fill" data-fsb-fill style="width:0%"></div></div>
+      </div>
+    {%- endif -%}
+
+    <form action="{{ routes.cart_url }}" method="post" id="CartPageForm">
+      <div style="display:grid;grid-template-columns:1.6fr 0.9fr;gap:40px;align-items:start;">
+        <div data-cart-items>
+          {% render 'cart-items' %}
+        </div>
+
+        <aside style="position:sticky;top:calc(var(--header-height) + 20px);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:24px;">
+          <h3 style="margin-bottom:16px;">Order summary</h3>
+          <div class="cart-coupon">
+            <input type="text" class="field" name="discount" placeholder="Discount code">
+            <button type="submit" name="update" class="btn btn--outline btn--sm">{{ 'cart.apply' | t }}</button>
+          </div>
+          <div class="cart-totals" style="border-top:1px solid var(--color-border);padding-top:16px;">
+            <span class="cart-totals__label">{{ 'cart.subtotal' | t }}</span>
+            <span class="cart-totals__value" data-cart-subtotal>{{ cart.total_price | money }}</span>
+          </div>
+          <p style="font-size:0.8rem;color:var(--color-muted);">{{ 'cart.taxes_note' | t }}</p>
+          <button type="submit" name="checkout" class="btn btn--block btn--lg" style="margin:14px 0 8px;">{% render 'icon', name: 'lock' %} {{ 'cart.checkout' | t }}</button>
+          {%- if additional_checkout_buttons -%}
+            <div class="cart-express">{{ content_for_additional_checkout_buttons }}</div>
+          {%- endif -%}
+          <p class="payment-trust" style="justify-content:center;margin-top:14px;">{% render 'icon', name: 'shield' %} {{ 'cart.secure' | t }}</p>
+        </aside>
+      </div>
+    </form>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{ "name": "Cart", "tag": "section", "settings": [] }
+{% endschema %}

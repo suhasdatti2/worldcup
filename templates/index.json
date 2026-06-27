@@ -1,0 +1,58 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "The 2026 Collection",
+        "heading": "Represent Your Colors.",
+        "accent_last_word": true,
+        "subheading": "Premium football jerseys inspired by the world’s biggest matches.",
+        "button_label": "Shop Jerseys",
+        "button_label_2": "Best Sellers",
+        "show_paths": true,
+        "show_scroll": true
+      }
+    },
+    "teams": {
+      "type": "featured-teams"
+    },
+    "showcase": {
+      "type": "jersey-showcase"
+    },
+    "bestsellers": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Fan Favourites",
+        "heading": "Best Sellers",
+        "layout": "slider",
+        "products_to_show": 8
+      }
+    },
+    "why": {
+      "type": "why-choose"
+    },
+    "promo": {
+      "type": "promo-banner"
+    },
+    "testimonials": {
+      "type": "testimonials"
+    },
+    "social": {
+      "type": "social-gallery"
+    },
+    "newsletter": {
+      "type": "newsletter"
+    }
+  },
+  "order": [
+    "hero",
+    "teams",
+    "showcase",
+    "bestsellers",
+    "why",
+    "promo",
+    "testimonials",
+    "social",
+    "newsletter"
+  ]
+}

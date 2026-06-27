@@ -1,0 +1,87 @@
+{%- comment -%}
+  Product card. Params:
+    product (required), index (for lazy/eager)
+{%- endcomment -%}
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign is_new = false
+  if product.tags contains 'new' or product.tags contains 'New'
+    assign is_new = true
+  endif
+  assign sold_out = false
+  unless product.available
+    assign sold_out = true
+  endunless
+
+  assign rating = product.metafields.reviews.rating.value | default: 4.9
+  assign rating_count = product.metafields.reviews.rating_count | default: 128
+  assign second_image = product.images[1]
+  assign loading = 'lazy'
+  if index and index < 4
+    assign loading = 'eager'
+  endif
+-%}
+
+<div class="product-card reveal" data-product-card>
+  <a href="{{ product.url }}" class="product-card__media" aria-label="{{ product.title | escape }}">
+    {%- if product.featured_media -%}
+      {{ product.featured_media | image_url: width: 700 | image_tag:
+        class: 'product-card__img--main lazy-img',
+        loading: loading,
+        widths: '300,400,600,700',
+        sizes: '(max-width: 749px) 50vw, 25vw',
+        alt: product.featured_media.alt | default: product.title }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+    {%- if second_image -%}
+      {{ second_image | image_url: width: 700 | image_tag:
+        class: 'product-card__img--hover',
+        loading: 'lazy',
+        widths: '300,400,600,700',
+        sizes: '(max-width: 749px) 50vw, 25vw',
+        alt: '' }}
+    {%- endif -%}
+  </a>
+
+  <div class="product-card__badges">
+    {%- if on_sale -%}
+      {%- assign pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+      <span class="badge badge--sale">-{{ pct }}%</span>
+    {%- endif -%}
+    {%- if is_new -%}<span class="badge badge--blue">New</span>{%- endif -%}
+    {%- if sold_out -%}<span class="badge badge--soft">Sold out</span>{%- endif -%}
+  </div>
+
+  {%- if settings.show_wishlist -%}
+    <button class="product-card__wishlist" data-wishlist data-product-handle="{{ product.handle }}" aria-label="{{ 'accessibility.wishlist' | t }}" type="button">
+      {% render 'icon', name: 'heart' %}
+    </button>
+  {%- endif -%}
+
+  {%- if settings.show_quick_add and product.available -%}
+    <div class="product-card__quick">
+      {%- if product.has_only_default_variant or product.variants.size == 1 -%}
+        <button type="button" class="btn btn--light btn--sm" data-quick-add data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+          {% render 'icon', name: 'plus' %} {{ 'products.product.quick_add' | t }}
+        </button>
+      {%- else -%}
+        <a href="{{ product.url }}" class="btn btn--light btn--sm">{% render 'icon', name: 'plus' %} {{ 'products.product.quick_add' | t }}</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="product-card__info">
+    {%- if settings.show_vendor and product.vendor != blank -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+    <h3 class="product-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {%- if settings.show_rating -%}
+      <div class="product-card__rating">{% render 'rating', value: rating, count: rating_count, show_count: true %}</div>
+    {%- endif -%}
+    {% render 'price', product: product, context: 'card' %}
+  </div>
+</div>

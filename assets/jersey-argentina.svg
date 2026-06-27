@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="Argentina jersey">
+  <defs>
+    <linearGradient id="abg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f3ec"/><stop offset="1" stop-color="#e9e4d8"/></linearGradient>
+    <clipPath id="ashirt"><path d="M-60,-150 L-110,-118 L-150,-40 L-104,-10 L-78,-52 L-78,150 L78,150 L78,-52 L104,-10 L150,-40 L110,-118 L60,-150 C44,-118 -44,-118 -60,-150 Z"/></clipPath>
+  </defs>
+  <rect width="400" height="500" fill="url(#abg)"/>
+  <g transform="translate(200,255)">
+    <g clip-path="url(#ashirt)">
+      <rect x="-160" y="-160" width="320" height="320" fill="#ffffff"/>
+      <g fill="#75aadb"><rect x="-60" y="-160" width="40" height="320"/><rect x="20" y="-160" width="40" height="320"/><rect x="-140" y="-160" width="30" height="320"/><rect x="100" y="-160" width="30" height="320"/></g>
+    </g>
+    <path d="M-60,-150 L-110,-118 L-150,-40 L-104,-10 L-78,-52 L-78,150 L78,150 L78,-52 L104,-10 L150,-40 L110,-118 L60,-150 C44,-118 -44,-118 -60,-150 Z" fill="none" stroke="#16161a" stroke-width="3"/>
+    <path d="M-60,-150 C-44,-118 44,-118 60,-150 L52,-150 C40,-128 -40,-128 -52,-150 Z" fill="#16161a"/>
+    <path d="M-150,-40 L-104,-10 L-110,-2 L-156,-32 Z" fill="#16161a"/>
+    <path d="M150,-40 L104,-10 L110,-2 L156,-32 Z" fill="#16161a"/>
+    <circle cx="50" cy="-70" r="22" fill="#f2c14e"/><text x="50" y="-64" font-family="Arial, sans-serif" font-size="14" font-weight="800" fill="#16161a" text-anchor="middle">AFA</text>
+    <text x="0" y="70" font-family="Arial Black, Arial, sans-serif" font-size="30" font-weight="900" fill="#16161a" text-anchor="middle">ARGENTINA</text>
+  </g>
+</svg>

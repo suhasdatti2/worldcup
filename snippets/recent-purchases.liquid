@@ -1,0 +1,33 @@
+{%- comment -%}
+  Recent purchase social-proof toast. Pulls real product names/images from a
+  collection so notifications feel authentic. Data emitted as JSON for JS.
+{%- endcomment -%}
+{%- assign pool = collections[settings.cart_upsell_collection].products | default: collections.all.products -%}
+<div class="recent-toast" id="RecentToast" data-recent-toast role="status" aria-live="polite">
+  <div class="recent-toast__media" data-rt-media></div>
+  <div class="recent-toast__text">
+    <span data-rt-text></span>
+    <div class="recent-toast__time"><span data-rt-time></span> · <span class="recent-toast__verified">{% render 'icon', name: 'check-circle' %} Verified</span></div>
+  </div>
+  <button class="recent-toast__close" data-rt-close aria-label="Dismiss">&times;</button>
+</div>
+
+<script type="application/json" data-recent-data>
+[
+  {%- assign names = 'Liam from Dublin,Sofia from Madrid,Noah from Toronto,Emma from Sydney,Lucas from São Paulo,Yuki from Osaka,Marco from Milan,Ava from Manchester,Diego from Buenos Aires,Hugo from Lisbon' | split: ',' -%}
+  {%- for product in pool limit: 8 -%}
+    {%- assign n = forloop.index0 | modulo: 10 -%}
+    {
+      "name": {{ names[n] | json }},
+      "product": {{ product.title | json }},
+      "url": {{ product.url | json }},
+      "image": {{ product.featured_image | image_url: width: 120 | json }},
+      "mins": {{ forloop.index | times: 7 | plus: 3 }}
+    }{%- unless forloop.last -%},{%- endunless -%}
+  {%- else -%}
+    { "name": "Liam from Dublin", "product": "Portugal '24 Home Kit", "url": "#", "image": null, "mins": 4 },
+    { "name": "Sofia from Madrid", "product": "Argentina '24 Home Kit", "url": "#", "image": null, "mins": 11 },
+    { "name": "Noah from Toronto", "product": "Brasil '24 Home Kit", "url": "#", "image": null, "mins": 18 }
+  {%- endfor -%}
+]
+</script>

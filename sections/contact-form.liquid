@@ -1,0 +1,36 @@
+<div class="page-width page-width--narrow section" data-section-type="contact">
+  <div class="section-head section-head--center">
+    <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    <h1 class="section-head__title">{{ section.settings.heading | default: page.title }}</h1>
+    {%- if section.settings.text != blank -%}<p style="color:var(--color-muted);max-width:480px;">{{ section.settings.text }}</p>{%- endif -%}
+  </div>
+
+  {%- form 'contact', class: 'contact-form' -%}
+    {%- if form.posted_successfully? -%}
+      <div style="text-align:center;padding:30px;border:1px solid var(--color-border);border-radius:var(--radius);background:var(--color-surface);">
+        {% render 'icon', name: 'check-circle' %}
+        <p style="margin-top:8px;">Thanks — we’ll be in touch within 24 hours.</p>
+      </div>
+    {%- else -%}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <input type="text" name="contact[name]" class="field" placeholder="Name" required>
+        <input type="email" name="contact[email]" class="field" placeholder="Email" required>
+      </div>
+      <input type="text" name="contact[subject]" class="field" placeholder="Subject" style="margin-top:14px;">
+      <textarea name="contact[body]" class="field" rows="6" placeholder="How can we help?" required style="margin-top:14px;"></textarea>
+      <button type="submit" class="btn btn--gold btn--lg" style="margin-top:16px;">Send message</button>
+    {%- endif -%}
+  {%- endform -%}
+</div>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Get in touch" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Contact Us" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Questions about sizing, shipping, or your order? Our team replies within 24 hours." }
+  ]
+}
+{% endschema %}

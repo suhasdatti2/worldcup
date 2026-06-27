@@ -1,0 +1,28 @@
+<div class="overlay" data-search-overlay></div>
+<aside class="drawer drawer--search" id="SearchDrawer" data-search-drawer aria-label="{{ 'general.search.search' | t }}" aria-modal="true" role="dialog" style="width:min(560px,100vw);">
+  <div class="drawer__header">
+    <span class="drawer__title">{{ 'general.search.search' | t }}</span>
+    <button class="drawer__close" data-close-search aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+  <div class="drawer__body">
+    <form action="{{ routes.search_url }}" method="get" role="search" data-predictive-form>
+      <div style="position:relative;">
+        <input type="search" name="q" class="field" placeholder="{{ 'general.search.placeholder' | t }}" autocomplete="off" data-predictive-input style="padding-left:46px;">
+        <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--color-muted);">{% render 'icon', name: 'search' %}</span>
+      </div>
+      <input type="hidden" name="type" value="product">
+    </form>
+
+    <div class="search-results" data-predictive-results></div>
+
+    <div data-predictive-default>
+      <p class="cart-upsell__title" style="margin-top:22px;">Popular searches</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        {%- assign terms = 'Portugal,Brazil,Argentina,France,Home Kit,Retro' | split: ',' -%}
+        {%- for term in terms -%}
+          <a href="{{ routes.search_url }}?q={{ term | url_encode }}&type=product" class="badge badge--soft">{{ term }}</a>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,29 @@
+<div class="page-width page-width--narrow section" data-customer-addresses>
+  <div class="section-head"><div><p class="eyebrow">Addresses</p><h1 class="section-head__title">Your addresses</h1></div>
+    <a href="{{ routes.account_url }}" class="section-head__link">Back to account</a></div>
+
+  <button class="btn btn--gold" data-toggle-new-address style="margin-bottom:20px;">Add new address</button>
+
+  <div data-new-address hidden style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius);padding:22px;margin-bottom:24px;">
+    {%- form 'customer_address', customer.new_address -%}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <input type="text" name="address[first_name]" class="field" placeholder="First name">
+        <input type="text" name="address[last_name]" class="field" placeholder="Last name">
+      </div>
+      <input type="text" name="address[address1]" class="field" placeholder="Address" style="margin-top:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+        <input type="text" name="address[city]" class="field" placeholder="City">
+        <input type="text" name="address[zip]" class="field" placeholder="ZIP / Postal code">
+      </div>
+      <input type="text" name="address[country]" class="field" placeholder="Country" style="margin-top:12px;">
+      <button type="submit" class="btn btn--gold" style="margin-top:14px;">Save address</button>
+    {%- endform -%}
+  </div>
+
+  {%- for address in customer.addresses -%}
+    <div style="border:1px solid var(--color-border);border-radius:var(--radius);padding:18px;margin-bottom:14px;">
+      {%- if address == customer.default_address -%}<span class="badge badge--gold" style="margin-bottom:8px;">Default</span>{%- endif -%}
+      <p style="margin:0;">{{ address | format_address }}</p>
+    </div>
+  {%- endfor -%}
+</div>

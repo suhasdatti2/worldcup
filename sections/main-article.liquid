@@ -1,0 +1,20 @@
+<article class="page-width page-width--narrow section" data-section-type="article">
+  <div class="section-head section-head--center">
+    <p class="eyebrow">{{ article.published_at | date: '%B %d, %Y' }} · {{ article.author }}</p>
+    <h1 class="section-head__title">{{ article.title }}</h1>
+  </div>
+  {%- if article.image -%}
+    <div class="media" style="border-radius:var(--radius-lg);aspect-ratio:16/9;margin-bottom:32px;">
+      {{ article.image | image_url: width: 1400 | image_tag: loading: 'eager', alt: article.title }}
+    </div>
+  {%- endif -%}
+  <div class="rte" style="font-size:1.1rem;line-height:1.85;">{{ article.content }}</div>
+
+  {%- if blog.comments_enabled? -%}
+    <div style="margin-top:48px;">{{ article.comments_count }} comments</div>
+  {%- endif -%}
+</article>
+
+{% schema %}
+{ "name": "Article", "tag": "section", "settings": [] }
+{% endschema %}

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" class="no-js{% unless settings.enable_animations %} no-anim{% endunless %}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="{{ settings.color_dark }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- liquid
+      assign meta_title = page_title
+      if current_tags
+        assign meta_tags_joined = current_tags | join: ', '
+      endif
+    -%}
+    <title>{{ meta_title }}{% if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags_joined }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% render 'meta-tags' %}
+
+    {{ content_for_header }}
+
+    {%- liquid
+      assign body_font = settings.font_body
+      assign heading_font = settings.font_heading
+      assign heading_bold = heading_font | font_modify: 'weight', 'bolder'
+    -%}
+    {{ body_font | font_face: font_display: 'swap' }}
+    {{ heading_font | font_face: font_display: 'swap' }}
+    {%- if heading_bold -%}{{ heading_bold | font_face: font_display: 'swap' }}{%- endif -%}
+
+    <style>
+      :root {
+        --page-width: {{ settings.page_width }}px;
+        --radius: {{ settings.corner_radius }}px;
+        --radius-sm: {{ settings.corner_radius | minus: 6 | at_least: 4 }}px;
+        --radius-lg: {{ settings.corner_radius | plus: 10 }}px;
+
+        --color-text: {{ settings.color_text }};
+        --color-bg: {{ settings.color_background }};
+        --color-surface: {{ settings.color_surface }};
+        --color-dark: {{ settings.color_dark }};
+        --color-gold: {{ settings.color_gold }};
+        --color-blue: {{ settings.color_blue }};
+        --color-muted: {{ settings.color_muted }};
+        --color-border: {{ settings.color_text | color_modify: 'alpha', 0.10 }};
+        --color-border-strong: {{ settings.color_text | color_modify: 'alpha', 0.18 }};
+
+        --font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
+        --font-heading: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+        --font-heading-weight: {% if heading_bold %}{{ heading_bold.weight }}{% else %}{{ heading_font.weight }}{% endif %};
+        --body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+        --logo-width: {{ settings.logo_width }}px;
+      }
+      h1,h2,h3,h4,h5 { font-size: unset; }
+      :root { --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }}; }
+      h1,.h1 { font-size: calc(clamp(2.6rem, 6vw, 5rem) * var(--heading-scale)); }
+      h2,.h2 { font-size: calc(clamp(2rem, 4vw, 3.2rem) * var(--heading-scale)); }
+      h3,.h3 { font-size: calc(clamp(1.4rem, 2.4vw, 2rem) * var(--heading-scale)); }
+    </style>
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'component.css' | asset_url | stylesheet_tag }}
+    {{ 'product.css' | asset_url | stylesheet_tag }}
+
+    <script>document.documentElement.className = document.documentElement.className.replace('no-js','js');</script>
+  </head>
+
+  <body class="template-{{ request.page_type | handle }}">
+    <a class="skip-to-content" href="#MainContent">{{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}</a>
+
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
+
+    <main id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'footer' %}
+
+    {%- if settings.cart_type == 'drawer' -%}
+      {% render 'cart-drawer' %}
+    {%- endif -%}
+
+    {% render 'search-drawer' %}
+    {% render 'mobile-menu' %}
+
+    {%- if settings.enable_newsletter_popup -%}
+      {% render 'popup-newsletter' %}
+    {%- endif -%}
+
+    {%- if settings.enable_recent_purchases -%}
+      {% render 'recent-purchases' %}
+    {%- endif -%}
+
+    <div class="mini-toast" id="MiniToast" role="status" aria-live="polite">
+      {% render 'icon', name: 'check-circle' %}
+      <span id="MiniToastText">Added to cart</span>
+    </div>
+
+    <script>
+      window.theme = {
+        cartType: {{ settings.cart_type | json }},
+        freeShipBar: {{ settings.enable_free_shipping_bar | json }},
+        freeShipThreshold: {{ settings.free_shipping_threshold | times: 100 | json }},
+        moneyFormat: {{ shop.money_format | json }},
+        routes: {
+          cart: {{ routes.cart_url | json }},
+          cartAdd: {{ routes.cart_add_url | json }},
+          cartChange: {{ routes.cart_change_url | json }},
+          cartUpdate: {{ routes.cart_update_url | json }},
+          predictiveSearch: {{ routes.predictive_search_url | json }}
+        },
+        strings: {
+          addedToCart: {{ 'products.product.added_to_cart' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }}
+        }
+      };
+    </script>
+    {{ 'global.js' | asset_url | script_tag }}
+  </body>
+</html>

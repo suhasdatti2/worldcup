@@ -1,0 +1,12 @@
+<div class="page-width section" style="text-align:center;min-height:60vh;display:grid;place-items:center;" data-section-type="404">
+  <div>
+    <p class="eyebrow" style="justify-content:center;">404</p>
+    <h1 style="font-size:clamp(3rem,8vw,6rem);">{{ 'general.404.title' | t }}</h1>
+    <p style="color:var(--color-muted);max-width:440px;margin:0 auto 24px;">{{ 'general.404.subtext' | t }}</p>
+    <a href="{{ routes.root_url }}" class="btn btn--gold btn--lg">{{ 'general.404.link' | t }}</a>
+  </div>
+</div>
+
+{% schema %}
+{ "name": "404", "tag": "section", "settings": [] }
+{% endschema %}

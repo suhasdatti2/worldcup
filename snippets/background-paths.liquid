@@ -1,0 +1,30 @@
+{%- comment -%}
+  Animated floating SVG paths — translated from the React "Background Paths"
+  component into pure Liquid + CSS so it runs with zero JS.
+  Param: position (1 or -1)
+{%- endcomment -%}
+{%- assign p = position | default: 1 -%}
+<svg viewBox="0 0 696 316" fill="none" aria-hidden="true" focusable="false">
+  {%- for i in (0..35) -%}
+    {%- assign i5p = i | times: 5 | times: p -%}
+    {%- assign i6 = i | times: 6 -%}
+    {%- assign mx = 380 | minus: i5p -%}
+    {%- assign my = 189 | plus: i6 -%}
+    {%- assign c1x = 312 | minus: i5p -%}
+    {%- assign c1y = 216 | minus: i6 -%}
+    {%- assign e1x = 152 | minus: i5p -%}
+    {%- assign e1y = 343 | minus: i6 -%}
+    {%- assign c2x = 616 | minus: i5p -%}
+    {%- assign c2y = 470 | minus: i6 -%}
+    {%- assign c3x = 684 | minus: i5p -%}
+    {%- assign c3y = 875 | minus: i6 -%}
+    {%- assign sw = i | times: 0.03 | plus: 0.5 -%}
+    {%- assign op = i | times: 0.025 | plus: 0.08 -%}
+    {%- assign dur = i | modulo: 8 | plus: 18 -%}
+    <path class="floating-path"
+      d="M-{{ mx }} -{{ my }}C-{{ mx }} -{{ my }} -{{ c1x }} {{ c1y }} {{ e1x }} {{ e1y }}C{{ c2x }} {{ c2y }} {{ c3x }} {{ c3y }} {{ c3x }} {{ c3y }}"
+      stroke-width="{{ sw }}"
+      stroke-opacity="{{ op }}"
+      style="--d: {{ dur }}s; animation-delay: -{{ i }}s;"></path>
+  {%- endfor -%}
+</svg>

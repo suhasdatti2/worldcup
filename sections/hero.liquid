@@ -1,0 +1,114 @@
+{%- liquid
+  assign heading = section.settings.heading | default: 'Represent Your Colors.'
+  assign words = heading | split: ' '
+-%}
+
+<section class="hero" data-hero>
+  <div class="hero__bg">
+    {%- if section.settings.image != blank -%}
+      {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '750,1100,1500,1900,2400', alt: section.settings.image.alt | default: heading }}
+    {%- else -%}
+      {%- comment -%} Stadium-atmosphere gradient placeholder {%- endcomment -%}
+      <div style="position:absolute;inset:0;background:
+        radial-gradient(80% 60% at 70% 30%, rgba(0,194,255,0.18), transparent 60%),
+        radial-gradient(70% 80% at 20% 80%, rgba(212,175,55,0.16), transparent 55%),
+        linear-gradient(160deg,#101012,#0a0a0a 60%);"></div>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_paths -%}
+    <div class="hero__paths" style="color:#fff;">
+      {% render 'background-paths', position: 1 %}
+      {% render 'background-paths', position: -1 %}
+    </div>
+  {%- endif -%}
+
+  <div class="page-width hero__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    <h1 class="hero__title">
+      {%- assign delay = 0 -%}
+      {%- for word in words -%}
+        <span class="word{% if section.settings.accent_last_word and forloop.last %} accent{% endif %}">
+          {%- assign chars = word | split: '' -%}
+          {%- for ch in chars -%}
+            <span class="char" style="animation-delay: {{ delay | times: 0.035 }}s;">{{ ch }}</span>
+            {%- assign delay = delay | plus: 1 -%}
+          {%- endfor -%}
+        </span>{% unless forloop.last %} {% endunless %}
+      {%- endfor -%}
+    </h1>
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="hero__subtitle">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <div class="hero__cta">
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link }}" class="btn btn--gold btn--lg">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+      {%- if section.settings.button_label_2 != blank -%}
+        <a href="{{ section.settings.button_link_2 }}" class="btn btn--outline btn--lg">{{ section.settings.button_label_2 }}</a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="hero__stats">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }}>
+            <div class="hero__stat-num">{{ block.settings.number }}</div>
+            <div class="hero__stat-label">{{ block.settings.label }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_scroll -%}
+    <div class="scroll-indicator" aria-hidden="true">
+      <div class="scroll-indicator__mouse"></div>
+      <span>Scroll</span>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section-hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image", "info": "Immersive stadium / supporters atmosphere works best." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The 2026 Collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Represent Your Colors." },
+    { "type": "checkbox", "id": "accent_last_word", "label": "Outline last word", "default": true },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Premium football jerseys inspired by the world’s biggest matches." },
+    { "type": "text", "id": "button_label", "label": "Primary button", "default": "Shop Jerseys" },
+    { "type": "url", "id": "button_link", "label": "Primary link" },
+    { "type": "text", "id": "button_label_2", "label": "Secondary button", "default": "Best Sellers" },
+    { "type": "url", "id": "button_link_2", "label": "Secondary link" },
+    { "type": "checkbox", "id": "show_paths", "label": "Show animated background paths", "default": true },
+    { "type": "checkbox", "id": "show_scroll", "label": "Show scroll indicator", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "50k+" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Happy fans" }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "stat", "settings": { "number": "50k+", "label": "Happy fans" } },
+      { "type": "stat", "settings": { "number": "120+", "label": "Countries shipped" } },
+      { "type": "stat", "settings": { "number": "4.9★", "label": "Average rating" } }
+    ]
+  },
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

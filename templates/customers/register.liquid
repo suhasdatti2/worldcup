@@ -1,0 +1,14 @@
+<div class="page-width page-width--narrow section" style="max-width:460px;">
+  <div class="section-head section-head--center"><h1 class="section-head__title">{{ 'customer.login.create' | t }}</h1></div>
+  {%- form 'create_customer', novalidate: 'novalidate' -%}
+    {{ form.errors | default_errors }}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <input type="text" name="customer[first_name]" class="field" placeholder="First name">
+      <input type="text" name="customer[last_name]" class="field" placeholder="Last name">
+    </div>
+    <input type="email" name="customer[email]" class="field" placeholder="{{ 'customer.login.email' | t }}" required style="margin-bottom:12px;">
+    <input type="password" name="customer[password]" class="field" placeholder="{{ 'customer.login.password' | t }}" required>
+    <button type="submit" class="btn btn--gold btn--block btn--lg" style="margin-top:14px;">Create account</button>
+  {%- endform -%}
+  <p style="text-align:center;margin-top:18px;">Already have an account? <a href="{{ routes.account_login_url }}" style="font-weight:700;">Sign in</a></p>
+</div>

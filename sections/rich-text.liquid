@@ -1,0 +1,30 @@
+<section class="section{% if section.settings.dark %} bg-dark{% endif %}" data-section-type="rich-text">
+  <div class="page-width page-width--narrow" style="text-align:{{ section.settings.alignment }};">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'eyebrow' -%}<p class="eyebrow reveal" style="justify-content:{{ section.settings.alignment }};" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+        {%- when 'heading' -%}<h2 class="reveal" {{ block.shopify_attributes }}>{{ block.settings.text }}</h2>
+        {%- when 'text' -%}<div class="rte reveal" style="font-size:1.1rem;color:{% if section.settings.dark %}rgba(255,255,255,0.78){% else %}var(--color-muted){% endif %};" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- when 'button' -%}<div class="reveal" style="margin-top:24px;" {{ block.shopify_attributes }}><a href="{{ block.settings.link }}" class="btn btn--gold btn--lg">{{ block.settings.label }}</a></div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "tag": "section",
+  "settings": [
+    { "type": "select", "id": "alignment", "label": "Alignment", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ], "default": "center" },
+    { "type": "checkbox", "id": "dark", "label": "Dark background", "default": false }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Eyebrow", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Our Story" } ] },
+    { "type": "heading", "name": "Heading", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Built for the Beautiful Game" } ] },
+    { "type": "text", "name": "Text", "settings": [ { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Novora is an independent football apparel brand obsessed with detail. Every kit is engineered with match-grade fabric and finished to a premium standard.</p>" } ] },
+    { "type": "button", "name": "Button", "settings": [ { "type": "text", "id": "label", "label": "Label", "default": "Shop the collection" }, { "type": "url", "id": "link", "label": "Link" } ] }
+  ],
+  "presets": [ { "name": "Rich text", "blocks": [ { "type": "eyebrow" }, { "type": "heading" }, { "type": "text" } ] } ]
+}
+{% endschema %}

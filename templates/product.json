@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": { "type": "main-product" },
+    "fbt": { "type": "frequently-bought" },
+    "related": { "type": "related-products" },
+    "recently-viewed": { "type": "recently-viewed" }
+  },
+  "order": ["main", "fbt", "related", "recently-viewed"]
+}

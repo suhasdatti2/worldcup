@@ -1,0 +1,31 @@
+{%- comment -%}
+  Price block. Param: product (or variant via target), context: 'card' | 'product'
+{%- endcomment -%}
+{%- liquid
+  assign target = product
+  assign on_sale = false
+  if target.compare_at_price > target.price
+    assign on_sale = true
+  endif
+  assign cls = ''
+  if context == 'product'
+    assign cls = 'product__price'
+  else
+    assign cls = 'product-card__price'
+  endif
+-%}
+<div class="{% if context == 'product' %}product__price-row{% else %}product-card__price-row{% endif %}">
+  {%- if target.price_varies and target.price_min < target.price -%}
+    <span class="{{ cls }}">{{ 'products.product.from' | t }} {{ target.price_min | money }}</span>
+  {%- else -%}
+    <span class="{{ cls }}{% if on_sale %} {{ cls }}--sale{% endif %}">{{ target.price | money }}</span>
+  {%- endif -%}
+
+  {%- if on_sale -%}
+    <span class="{{ cls }}--compare {% if context != 'product' %}product-card__price--compare{% endif %}">{{ target.compare_at_price | money }}</span>
+    {%- if context == 'product' -%}
+      {%- assign saved = target.compare_at_price | minus: target.price -%}
+      <span class="product__save">{{ 'products.product.save' | t: amount: saved | money }}</span>
+    {%- endif -%}
+  {%- endif -%}
+</div>

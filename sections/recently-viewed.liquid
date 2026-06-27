@@ -1,0 +1,23 @@
+<section class="section" data-section-type="recently-viewed" data-recently-viewed hidden>
+  <div class="page-width">
+    <div class="section-head reveal">
+      <div>
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2 class="section-head__title">{{ section.settings.heading }}</h2>
+      </div>
+    </div>
+    <div class="product-rail" data-rv-list></div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Recently viewed",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Pick up where you left off" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Recently Viewed" }
+  ],
+  "presets": [{ "name": "Recently viewed" }]
+}
+{% endschema %}

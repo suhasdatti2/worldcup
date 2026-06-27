@@ -1,0 +1,150 @@
+{%- liquid
+  assign blocks = section.blocks
+-%}
+
+<section class="section showcase reveal" data-section-type="showcase">
+  <div class="page-width">
+    <div class="showcase__layout">
+
+      <div class="showcase__copy">
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+        <p>{{ section.settings.text }}</p>
+
+        {%- if section.settings.price != blank -%}
+          <div class="showcase__price-row">
+            <span class="showcase__price">{{ section.settings.price }}</span>
+            {%- if section.settings.compare_price != blank -%}
+              <span class="showcase__price-old">{{ section.settings.compare_price }}</span>
+              <span class="badge badge--sale">Save 44%</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="hero__cta" style="margin-top:6px;">
+          {%- if section.settings.button_label != blank -%}
+            <a href="{{ section.settings.button_link }}" class="btn btn--gold">{{ section.settings.button_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.button_label_2 != blank -%}
+            <a href="{{ section.settings.button_link_2 }}" class="btn btn--outline">{{ section.settings.button_label_2 }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Front box: stacked display cards (first 3 jerseys) {%- endcomment -%}
+      <div class="stack" data-stack>
+        {%- for block in blocks limit: 3 -%}
+          {%- liquid
+            assign img = block.settings.image
+            assign art = block.settings.art
+          -%}
+          <a href="{{ block.settings.link | default: '#' }}" class="stack-card" {{ block.shopify_attributes }}>
+            <div class="stack-card__media">
+              {%- if img != blank -%}
+                {{ img | image_url: width: 720 | image_tag: loading: 'lazy', alt: block.settings.name }}
+              {%- elsif art != 'none' -%}
+                <img src="{{ art | prepend: 'jersey-' | append: '.svg' | asset_url }}" alt="{{ block.settings.name }}" loading="lazy" width="400" height="500">
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+              {%- if block.settings.tag != blank -%}
+                <span class="stack-card__tag badge badge--gold">{{ block.settings.tag }}</span>
+              {%- endif -%}
+            </div>
+            <div class="stack-card__body">
+              <span class="stack-card__team">{{ block.settings.name }}</span>
+              <div class="stack-card__meta">
+                <span class="stack-card__price">{{ block.settings.price }}</span>
+                {% render 'icon', name: 'arrow-right' %}
+              </div>
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} Bottom rail: click to view different jerseys & prices {%- endcomment -%}
+    {%- if blocks.size > 0 -%}
+      <div style="margin-top:48px;">
+        <div class="section-head" style="margin-bottom:18px;">
+          <p class="eyebrow">{{ section.settings.rail_heading | default: 'Pick your kit' }}</p>
+        </div>
+        <div class="jersey-rail" data-rail>
+          {%- for block in blocks -%}
+            {%- liquid
+              assign img = block.settings.image
+              assign art = block.settings.art
+            -%}
+            <a href="{{ block.settings.link | default: '#' }}" class="jersey-rail__item" {{ block.shopify_attributes }}>
+              <div class="jersey-rail__thumb">
+                {%- if img != blank -%}
+                  {{ img | image_url: width: 300 | image_tag: loading: 'lazy', alt: block.settings.name }}
+                {%- elsif art != 'none' -%}
+                  <img src="{{ art | prepend: 'jersey-' | append: '.svg' | asset_url }}" alt="{{ block.settings.name }}" loading="lazy" width="132" height="150">
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <div class="jersey-rail__name">{{ block.settings.name }}</div>
+              <div class="jersey-rail__price">{{ block.settings.price }}</div>
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Jersey showcase",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Featured Drop" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Iconic Kit Collection" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Match-grade fabric, tailored fit, and authentic colorways. Built for the terraces and the streets alike." },
+    { "type": "text", "id": "price", "label": "Price label", "default": "$59.00" },
+    { "type": "text", "id": "compare_price", "label": "Compare-at label", "default": "$105.00" },
+    { "type": "text", "id": "button_label", "label": "Button 1", "default": "Shop the Drop" },
+    { "type": "url", "id": "button_link", "label": "Button 1 link" },
+    { "type": "text", "id": "button_label_2", "label": "Button 2", "default": "View All Kits" },
+    { "type": "url", "id": "button_link_2", "label": "Button 2 link" },
+    { "type": "text", "id": "rail_heading", "label": "Rail heading", "default": "Pick your kit" }
+  ],
+  "blocks": [
+    {
+      "type": "jersey",
+      "name": "Jersey",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Jersey photo", "info": "Upload the real product photo. Falls back to a styled illustration." },
+        {
+          "type": "select",
+          "id": "art",
+          "label": "Fallback illustration",
+          "options": [
+            { "value": "portugal", "label": "Portugal" },
+            { "value": "brazil", "label": "Brazil" },
+            { "value": "argentina", "label": "Argentina" },
+            { "value": "france", "label": "France" },
+            { "value": "none", "label": "None" }
+          ],
+          "default": "portugal"
+        },
+        { "type": "text", "id": "name", "label": "Name", "default": "Portugal '24" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$59.00" },
+        { "type": "text", "id": "tag", "label": "Tag", "default": "44% OFF" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "jersey", "settings": { "art": "portugal", "name": "Portugal '24", "price": "$59.00", "tag": "44% OFF" } },
+      { "type": "jersey", "settings": { "art": "brazil", "name": "Brasil '24", "price": "$59.00", "tag": "Best Seller" } },
+      { "type": "jersey", "settings": { "art": "argentina", "name": "Argentina '24", "price": "$59.00", "tag": "New" } },
+      { "type": "jersey", "settings": { "art": "france", "name": "France '24", "price": "$59.00", "tag": "Hot" } }
+    ]
+  },
+  "presets": [{ "name": "Jersey showcase" }]
+}
+{% endschema %}

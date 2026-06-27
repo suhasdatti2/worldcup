@@ -1,0 +1,19 @@
+<div class="page-width page-width--narrow section" data-section-type="page">
+  <div class="section-head section-head--center">
+    {%- if section.settings.show_breadcrumb -%}<p class="eyebrow">{{ page.title }}</p>{%- endif -%}
+    <h1 class="section-head__title">{{ page.title }}</h1>
+  </div>
+  <div class="rte" style="font-size:1.05rem;line-height:1.8;">
+    {{ page.content }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "Show eyebrow", "default": true }
+  ]
+}
+{% endschema %}
