@@ -221,6 +221,7 @@ p { margin: 0 0 1em; }
   transform: translateX(-120%);
   z-index: -1;
 }
+.btn svg { width: 1.15em; height: 1.15em; flex: 0 0 auto; }
 .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .btn:hover::after { transform: translateX(120%); transition: transform 0.7s var(--ease); }
 .btn:active { transform: translateY(0); }

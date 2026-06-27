@@ -20,9 +20,24 @@
           {%- when 'menu' -%}
             <div class="footer-col" {{ block.shopify_attributes }}>
               <p class="footer-col__title">{{ block.settings.heading }}</p>
-              {%- for link in block.settings.menu.links -%}
-                <a href="{{ link.url }}">{{ link.title }}</a>
-              {%- endfor -%}
+              {%- if block.settings.menu != blank and block.settings.menu.links.size > 0 -%}
+                {%- for link in block.settings.menu.links -%}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                {%- endfor -%}
+              {%- else -%}
+                {%- comment -%} Fallback links until a menu is assigned in the editor {%- endcomment -%}
+                {%- if block.settings.fallback == 'support' -%}
+                  <a href="/pages/contact">Contact us</a>
+                  <a href="{{ routes.search_url }}">Search</a>
+                  {%- for policy in shop.policies -%}
+                    <a href="{{ policy.url }}">{{ policy.title }}</a>
+                  {%- endfor -%}
+                {%- else -%}
+                  <a href="{{ routes.all_products_collection_url }}">All Jerseys</a>
+                  <a href="{{ routes.collections_url }}">Collections</a>
+                  <a href="{{ routes.search_url }}">Search</a>
+                {%- endif -%}
+              {%- endif -%}
             </div>
           {%- when 'newsletter' -%}
             <div class="footer-col" {{ block.shopify_attributes }}>
@@ -96,7 +111,17 @@
       "name": "Menu column",
       "settings": [
         { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
-        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+        { "type": "link_list", "id": "menu", "label": "Menu" },
+        {
+          "type": "select",
+          "id": "fallback",
+          "label": "Fallback links (used until a menu is assigned)",
+          "options": [
+            { "value": "shop", "label": "Shop links" },
+            { "value": "support", "label": "Support links" }
+          ],
+          "default": "shop"
+        }
       ]
     },
     {
@@ -111,8 +136,8 @@
   ],
   "default": {
     "blocks": [
-      { "type": "menu", "settings": { "heading": "Shop" } },
-      { "type": "menu", "settings": { "heading": "Support" } },
+      { "type": "menu", "settings": { "heading": "Shop", "fallback": "shop" } },
+      { "type": "menu", "settings": { "heading": "Support", "fallback": "support" } },
       { "type": "newsletter" }
     ]
   }
