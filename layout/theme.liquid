@@ -33,11 +33,12 @@
       assign heading_font = settings.font_heading
       assign heading_bold = heading_font | font_modify: 'weight', 'bolder'
     -%}
-    {{ body_font | font_face: font_display: 'swap' }}
-    {{ heading_font | font_face: font_display: 'swap' }}
-    {%- if heading_bold -%}{{ heading_bold | font_face: font_display: 'swap' }}{%- endif -%}
 
     <style>
+      {{ body_font | font_face: font_display: 'swap' }}
+      {{ heading_font | font_face: font_display: 'swap' }}
+      {% if heading_bold %}{{ heading_bold | font_face: font_display: 'swap' }}{% endif %}
+
       :root {
         --page-width: {{ settings.page_width }}px;
         --radius: {{ settings.corner_radius }}px;
