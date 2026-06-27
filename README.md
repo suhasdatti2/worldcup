@@ -20,8 +20,7 @@ national football federation.
 │   ├── base.css              # Design tokens, reset, typography, buttons, utilities
 │   ├── component.css         # Header, hero, sections, product cards, footer
 │   ├── product.css           # Product page, cart drawer, popups, drawers
-│   ├── global.js             # All interactivity (cart, variants, animations, CRO)
-│   └── jersey-*.svg          # Styled default jersey illustrations (placeholders)
+│   └── global.js             # All interactivity (cart, variants, animations, CRO)
 ├── config/
 │   ├── settings_schema.json  # Theme editor settings (colors, type, cart, CRO…)
 │   └── settings_data.json    # Default values (clay + gold + electric-blue palette)
@@ -102,14 +101,20 @@ CSS + JS** so they run inside Shopify with **zero JS dependencies** (no
 > resolve to `@/components/ui`), then `npx shadcn@latest add button` and drop the
 > two files into `components/ui/`, and `npm i framer-motion lucide-react`.
 
-## 🖼️ Jersey images
+## 🖼️ Images (you add your own)
 
-The provided jersey photos (Portugal #7, Brazil, Argentina, France) are wired in
-as **Theme Editor image fields**. Because binary photos can't be committed from
-this environment, each showcase/team block ships with a **styled SVG jersey
-illustration** (`assets/jersey-*.svg`) as a polished default. To use the real
-photos: **Theme Editor → Jersey Showcase / Featured Teams → upload image** on
-each block (or attach them as product images, which the cards use automatically).
+The theme ships with **no bundled photos** — every image slot uses a clean
+Shopify placeholder until you upload your own. Add images in the **Theme
+Editor**:
+
+- **Hero:** Home page → Hero → *Background image*
+- **Jersey Showcase ("front box" + rail):** Home page → Jersey Showcase → each
+  *Jersey* block → *Jersey photo*
+- **Featured Teams / Promo / Social Gallery:** their respective sections → upload
+  on each block
+
+Product cards across the store use your **product images** automatically, so
+once your products have photos, collections and sliders fill in on their own.
 
 ---
 

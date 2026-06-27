@@ -29,7 +29,8 @@
             {%- if img != blank -%}
               {{ img | image_url: width: 700 | image_tag: loading: 'lazy', sizes: '(max-width:749px) 50vw, 25vw', widths: '300,500,700', alt: block.settings.name }}
             {%- else -%}
-              {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- assign ph = forloop.index0 | modulo: 6 | plus: 1 -%}
+              {{ 'product-' | append: ph | placeholder_svg_tag: 'placeholder-svg' }}
             {%- endif -%}
           </div>
           <div class="team-card__inner">

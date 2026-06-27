@@ -16,7 +16,7 @@
             <span class="showcase__price">{{ section.settings.price }}</span>
             {%- if section.settings.compare_price != blank -%}
               <span class="showcase__price-old">{{ section.settings.compare_price }}</span>
-              <span class="badge badge--sale">Save 44%</span>
+              {%- if section.settings.save_badge != blank -%}<span class="badge badge--sale">{{ section.settings.save_badge }}</span>{%- endif -%}
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -34,18 +34,13 @@
       {%- comment -%} Front box: stacked display cards (first 3 jerseys) {%- endcomment -%}
       <div class="stack" data-stack>
         {%- for block in blocks limit: 3 -%}
-          {%- liquid
-            assign img = block.settings.image
-            assign art = block.settings.art
-          -%}
           <a href="{{ block.settings.link | default: '#' }}" class="stack-card" {{ block.shopify_attributes }}>
             <div class="stack-card__media">
-              {%- if img != blank -%}
-                {{ img | image_url: width: 720 | image_tag: loading: 'lazy', alt: block.settings.name }}
-              {%- elsif art != 'none' -%}
-                <img src="{{ art | prepend: 'jersey-' | append: '.svg' | asset_url }}" alt="{{ block.settings.name }}" loading="lazy" width="400" height="500">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 720 | image_tag: loading: 'lazy', widths: '300,500,720', alt: block.settings.name }}
               {%- else -%}
-                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- assign ph = forloop.index0 | modulo: 6 | plus: 1 -%}
+                {{ 'product-' | append: ph | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}
               {%- if block.settings.tag != blank -%}
                 <span class="stack-card__tag badge badge--gold">{{ block.settings.tag }}</span>
@@ -71,18 +66,13 @@
         </div>
         <div class="jersey-rail" data-rail>
           {%- for block in blocks -%}
-            {%- liquid
-              assign img = block.settings.image
-              assign art = block.settings.art
-            -%}
             <a href="{{ block.settings.link | default: '#' }}" class="jersey-rail__item" {{ block.shopify_attributes }}>
               <div class="jersey-rail__thumb">
-                {%- if img != blank -%}
-                  {{ img | image_url: width: 300 | image_tag: loading: 'lazy', alt: block.settings.name }}
-                {%- elsif art != 'none' -%}
-                  <img src="{{ art | prepend: 'jersey-' | append: '.svg' | asset_url }}" alt="{{ block.settings.name }}" loading="lazy" width="132" height="150">
+                {%- if block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', widths: '150,300', alt: block.settings.name }}
                 {%- else -%}
-                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- assign ph = forloop.index0 | modulo: 6 | plus: 1 -%}
+                  {{ 'product-' | append: ph | placeholder_svg_tag: 'placeholder-svg' }}
                 {%- endif -%}
               </div>
               <div class="jersey-rail__name">{{ block.settings.name }}</div>
@@ -105,6 +95,7 @@
     { "type": "textarea", "id": "text", "label": "Text", "default": "Match-grade fabric, tailored fit, and authentic colorways. Built for the terraces and the streets alike." },
     { "type": "text", "id": "price", "label": "Price label", "default": "$59.00" },
     { "type": "text", "id": "compare_price", "label": "Compare-at label", "default": "$105.00" },
+    { "type": "text", "id": "save_badge", "label": "Save badge", "default": "Save 44%" },
     { "type": "text", "id": "button_label", "label": "Button 1", "default": "Shop the Drop" },
     { "type": "url", "id": "button_link", "label": "Button 1 link" },
     { "type": "text", "id": "button_label_2", "label": "Button 2", "default": "View All Kits" },
@@ -116,21 +107,8 @@
       "type": "jersey",
       "name": "Jersey",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Jersey photo", "info": "Upload the real product photo. Falls back to a styled illustration." },
-        {
-          "type": "select",
-          "id": "art",
-          "label": "Fallback illustration",
-          "options": [
-            { "value": "portugal", "label": "Portugal" },
-            { "value": "brazil", "label": "Brazil" },
-            { "value": "argentina", "label": "Argentina" },
-            { "value": "france", "label": "France" },
-            { "value": "none", "label": "None" }
-          ],
-          "default": "portugal"
-        },
-        { "type": "text", "id": "name", "label": "Name", "default": "Portugal '24" },
+        { "type": "image_picker", "id": "image", "label": "Jersey photo", "info": "Upload your jersey image here. A placeholder shows until you do." },
+        { "type": "text", "id": "name", "label": "Name", "default": "Home Kit" },
         { "type": "text", "id": "price", "label": "Price", "default": "$59.00" },
         { "type": "text", "id": "tag", "label": "Tag", "default": "44% OFF" },
         { "type": "url", "id": "link", "label": "Link" }
@@ -139,10 +117,10 @@
   ],
   "default": {
     "blocks": [
-      { "type": "jersey", "settings": { "art": "portugal", "name": "Portugal '24", "price": "$59.00", "tag": "44% OFF" } },
-      { "type": "jersey", "settings": { "art": "brazil", "name": "Brasil '24", "price": "$59.00", "tag": "Best Seller" } },
-      { "type": "jersey", "settings": { "art": "argentina", "name": "Argentina '24", "price": "$59.00", "tag": "New" } },
-      { "type": "jersey", "settings": { "art": "france", "name": "France '24", "price": "$59.00", "tag": "Hot" } }
+      { "type": "jersey", "settings": { "name": "Home Kit", "price": "$59.00", "tag": "44% OFF" } },
+      { "type": "jersey", "settings": { "name": "Away Kit", "price": "$59.00", "tag": "Best Seller" } },
+      { "type": "jersey", "settings": { "name": "Third Kit", "price": "$59.00", "tag": "New" } },
+      { "type": "jersey", "settings": { "name": "Retro Kit", "price": "$59.00", "tag": "Hot" } }
     ]
   },
   "presets": [{ "name": "Jersey showcase" }]

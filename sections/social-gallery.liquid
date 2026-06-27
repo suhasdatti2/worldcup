@@ -12,7 +12,8 @@
           {%- if block.settings.image != blank -%}
             {{ block.settings.image | image_url: width: 500 | image_tag: loading: 'lazy', sizes: '(max-width:749px) 33vw, 16vw', widths: '200,300,500', alt: '' }}
           {%- else -%}
-            {{ 'lifestyle-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- assign ph = forloop.index0 | modulo: 6 | plus: 1 -%}
+            {{ 'product-' | append: ph | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
           <span class="social-grid__icon">{% render 'icon', name: 'instagram' %}</span>
         </a>
